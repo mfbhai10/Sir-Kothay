@@ -445,94 +445,231 @@ function downloadQROnly() {
     }
 }
 
-function downloadQRWithInfo() {
+async function downloadQRWithInfo() {
     if (!qrCodeUrl) return;
-    
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Set canvas size
-    canvas.width = 600;
-    canvas.height = 800;
-    
-    // Background
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Gradient header
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-    gradient.addColorStop(0, '#f68b1f');
-    gradient.addColorStop(1, '#f68b1f');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, 120);
-    
-    // User name
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 32px Poppins, Arial';
-    ctx.textAlign = 'center';
-    const userName = document.getElementById('userName').textContent;
-    ctx.fillText(userName, canvas.width / 2, 70);
-    
-    // Load QR code image
-    const qrImg = new Image();
-    qrImg.crossOrigin = 'anonymous';
-    qrImg.onload = function() {
-        // Draw QR code
-        const qrSize = 300;
-        const qrX = (canvas.width - qrSize) / 2;
-        const qrY = 150;
-        ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
-        
-        // User info section
+
+    function drawableSize(d) {
+        var w = d.naturalWidth != null ? d.naturalWidth : d.width;
+        var h = d.naturalHeight != null ? d.naturalHeight : d.height;
+        return { w: w, h: h };
+    }
+
+    function closeDrawable(d) {
+        if (d && typeof d.close === 'function') {
+            try {
+                d.close();
+            } catch (e) {
+                /* ignore */
+            }
+        }
+    }
+
+    async function drawableFromBlob(blob) {
+        if (typeof createImageBitmap === 'function') {
+            try {
+                return await createImageBitmap(blob);
+            } catch (e) {
+                console.warn('createImageBitmap failed, using Image fallback:', e);
+            }
+        }
+        return new Promise(function (resolve, reject) {
+            var u = URL.createObjectURL(blob);
+            var img = new Image();
+            img.onload = function () {
+                URL.revokeObjectURL(u);
+                resolve(img);
+            };
+            img.onerror = function () {
+                URL.revokeObjectURL(u);
+                reject(new Error('Could not decode QR image'));
+            };
+            img.src = u;
+        });
+    }
+
+    var qrDrawable = null;
+    var footerDrawable = null;
+    try {
+        var res = await apiFetchImage(API_ENDPOINTS.QR_PNG_EXPORT);
+        if (!res.ok) {
+            var errBody = await res.text();
+            throw new Error('QR export HTTP ' + res.status + ': ' + errBody.slice(0, 160));
+        }
+        var qrBlob = await res.blob();
+        qrDrawable = await drawableFromBlob(qrBlob);
+
+        async function loadFooterDrawable() {
+            var attempts = [];
+
+            async function tryFooterResponse(fr, label) {
+                if (!fr || !fr.ok) {
+                    return null;
+                }
+                var fb = await fr.blob();
+                var ctype = (fr.headers.get('Content-Type') || fb.type || '').toLowerCase();
+                if (ctype.indexOf('text/html') >= 0 || ctype.indexOf('application/json') >= 0) {
+                    return null;
+                }
+                try {
+                    return await drawableFromBlob(fb);
+                } catch (de) {
+                    console.warn('Footer decode failed:', label, de);
+                    return null;
+                }
+            }
+
+            attempts.push({
+                label: 'api_footer_png',
+                run: function () {
+                    return apiFetchImage(API_ENDPOINTS.FOOTER_PNG_EXPORT);
+                },
+            });
+            attempts.push({
+                label: 'same_origin_static',
+                run: function () {
+                    return fetch(new URL('../static/images/qr/footer.png', window.location.href).href, {
+                        mode: 'cors',
+                        cache: 'no-store',
+                    });
+                },
+            });
+            attempts.push({
+                label: 'api_host_static',
+                run: function () {
+                    return fetch(API_BASE_URL + '/static/images/qr/footer.png', {
+                        mode: 'cors',
+                        cache: 'no-store',
+                    });
+                },
+            });
+
+            for (var ai = 0; ai < attempts.length; ai++) {
+                try {
+                    var fr = await attempts[ai].run();
+                    var decoded = await tryFooterResponse(fr, attempts[ai].label);
+                    if (decoded) {
+                        return decoded;
+                    }
+                } catch (fe) {
+                    console.warn('Footer load attempt failed:', attempts[ai].label, fe);
+                }
+            }
+            return null;
+        }
+
+        footerDrawable = await loadFooterDrawable();
+
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        canvas.width = 600;
+
+        var padX = 24;
+        var contentW = canvas.width - 2 * padX;
+        var footerDrawH = 0;
+        if (footerDrawable) {
+            var fs = drawableSize(footerDrawable);
+            if (fs.w > 0) {
+                footerDrawH = Math.round(fs.h * (contentW / fs.w));
+            }
+        }
+
+        var headerH = 120;
+        var qrSize = 300;
+        var qrY = 150;
+        var qrX = (canvas.width - qrSize) / 2;
+        var infoY = qrY + qrSize + 50;
+        var mainBottom = infoY + 180;
+        canvas.height = Math.ceil(mainBottom + 24 + Math.max(footerDrawH, 1) + 16);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        gradient.addColorStop(0, '#f68b1f');
+        gradient.addColorStop(1, '#f68b1f');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, headerH);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 32px Poppins, Arial';
+        ctx.textAlign = 'center';
+        var userName = document.getElementById('userName').textContent;
+        ctx.fillText(userName, canvas.width / 2, 70);
+
+        ctx.drawImage(qrDrawable, qrX, qrY, qrSize, qrSize);
+
         ctx.fillStyle = '#333333';
         ctx.font = 'bold 20px Poppins, Arial';
         ctx.textAlign = 'left';
-        
-        const infoY = qrY + qrSize + 50;
-        const infoX = 50;
-        
-        // Email
+
+        var infoX = 50;
+
         ctx.fillText('Email:', infoX, infoY);
         ctx.font = '18px Poppins, Arial';
         ctx.fillStyle = '#666666';
-        const email = document.getElementById('userEmail').textContent;
+        var email = document.getElementById('userEmail').textContent;
         ctx.fillText(email, infoX, infoY + 30);
-        
-        // Phone
+
         ctx.fillStyle = '#333333';
         ctx.font = 'bold 20px Poppins, Arial';
         ctx.fillText('Phone:', infoX, infoY + 70);
         ctx.font = '18px Poppins, Arial';
         ctx.fillStyle = '#666666';
-        const phone = document.getElementById('userPhone').textContent;
+        var phone = document.getElementById('userPhone').textContent;
         ctx.fillText(phone, infoX, infoY + 100);
-        
-        // Organization
+
         ctx.fillStyle = '#333333';
         ctx.font = 'bold 20px Poppins, Arial';
-        const orgText = document.getElementById('userOrg').textContent;
+        var orgText = document.getElementById('userOrg').textContent;
         ctx.fillText(orgText, infoX, infoY + 140);
-        
-        // Footer
-        ctx.fillStyle = '#f68b1f';
-        ctx.font = 'bold 16px Poppins, Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Sir Kothay - Stay Connected', canvas.width / 2, canvas.height - 30);
-        
-        // Download
-        canvas.toBlob(function(blob) {
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'qr-code-with-info.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            closeModal('downloadModal');
+
+        if (footerDrawable && footerDrawH > 0) {
+            ctx.drawImage(footerDrawable, padX, canvas.height - footerDrawH - 8, contentW, footerDrawH);
+        } else {
+            ctx.fillStyle = '#f68b1f';
+            ctx.font = 'bold 16px Poppins, Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Sir Kothay - Stay Connected', canvas.width / 2, canvas.height - 30);
+        }
+
+        await new Promise(function (resolve, reject) {
+            canvas.toBlob(function (outBlob) {
+                if (!outBlob) {
+                    reject(new Error('Canvas toBlob returned empty (browser security restriction).'));
+                    return;
+                }
+                try {
+                    var url = URL.createObjectURL(outBlob);
+                    var link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'qr-code-with-info.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    closeModal('downloadModal');
+                    resolve();
+                } catch (downErr) {
+                    reject(downErr);
+                }
+            }, 'image/png', 0.92);
         });
-    };
-    qrImg.src = qrCodeUrl;
+    } catch (err) {
+        console.error('downloadQRWithInfo:', err);
+        var msg =
+            err && err.message
+                ? String(err.message).slice(0, 220)
+                : 'Unknown error';
+        await skNotify(
+            'Could not build the full-page image.\n\n' +
+                msg +
+                '\n\nIf the problem is login, refresh and sign in again. You can still use “Download QR only”.',
+            { variant: 'error', title: 'QR code' }
+        );
+    } finally {
+        closeDrawable(qrDrawable);
+        closeDrawable(footerDrawable);
+    }
 }
 
 // Broadcast page function

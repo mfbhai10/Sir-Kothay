@@ -35,6 +35,10 @@ var API_ENDPOINTS = {
     UPDATE_USER_DETAILS: API_BASE_URL + '/api/dashboard/user-details/update_my_details/',
     MY_QRCODE: API_BASE_URL + '/api/qrcode/qrcodes/my_qrcode/',
     GENERATE_QR: API_BASE_URL + '/api/qrcode/qrcodes/generate/',
+    /** Authenticated PNG for dashboard canvas export (not the public /media/ URL). */
+    QR_PNG_EXPORT: API_BASE_URL + '/api/qrcode/qrcodes/qr_png/',
+    /** Footer banner PNG for “QR with user info” export (same file as client/static/images/qr/footer.png). */
+    FOOTER_PNG_EXPORT: API_BASE_URL + '/api/qrcode/qrcodes/footer_png/',
     MESSAGES: API_BASE_URL + '/api/broadcast/messages/my_messages/',
     ACTIVE_MESSAGE: API_BASE_URL + '/api/broadcast/messages/active_message/',
     CREATE_MESSAGE: API_BASE_URL + '/api/broadcast/messages/',
@@ -69,12 +73,25 @@ async function apiRequest(url, options) {
     }
 }
 
+/**
+ * GET binary (e.g. PNG) with JWT. Does not set Content-Type: application/json (that can break some proxies / odd stacks).
+ */
+async function apiFetchImage(url) {
+    var token = getAuthToken();
+    var headers = { Accept: 'image/png,image/*;q=0.9,*/*;q=0.1' };
+    if (token) {
+        headers.Authorization = 'Bearer ' + token;
+    }
+    return fetch(url, { method: 'GET', headers: headers, mode: 'cors', cache: 'no-store' });
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         API_BASE_URL: API_BASE_URL,
         API_ENDPOINTS: API_ENDPOINTS,
         getAuthToken: getAuthToken,
         apiRequest: apiRequest,
+        apiFetchImage: apiFetchImage,
         sirKothayContributorsApiUrl: sirKothayContributorsApiUrl,
     };
 }

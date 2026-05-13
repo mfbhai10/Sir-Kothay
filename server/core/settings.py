@@ -117,6 +117,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+# Public client root (no trailing slash): directory that contains `broadcast/message.html`.
+# QR payloads use {CLIENT_PUBLIC_BASE_URL}/broadcast/message.html?user=<slug> when set.
+# Example (Live Server, workspace = repo root): http://127.0.0.1:5500/client
+CLIENT_PUBLIC_BASE_URL = os.getenv('CLIENT_PUBLIC_BASE_URL', '').strip().rstrip('/')
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
