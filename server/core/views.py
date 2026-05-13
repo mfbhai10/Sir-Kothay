@@ -1,22 +1,30 @@
 import json
+import os
+import urllib.error
 import urllib.request
-from bs4 import BeautifulSoup
-from django.shortcuts import render
+
+from django.http import JsonResponse
+
+
+def _contributors_repo():
+    return os.getenv('GITHUB_CONTRIBUTORS_REPO', 'UIU-Developers-Hub/Sir-Kothay')
+
 
 def fetch_contributors():
-    contributors_url = "https://api.github.com/repos/UIU-Developers-Hub/Sir-Kothay/contributors"
+    contributors_url = (
+        f'https://api.github.com/repos/{_contributors_repo()}/contributors'
+    )
     contributors = []
     try:
-        with urllib.request.urlopen(contributors_url) as response:
+        with urllib.request.urlopen(contributors_url, timeout=15) as response:
             data = json.loads(response.read().decode('utf-8'))
             for user in data:
                 login = user['login']
                 profile_url = user['html_url']
                 image_url = user['avatar_url']
-                # Fetch more info
-                user_url = f"https://api.github.com/users/{login}"
+                user_url = f'https://api.github.com/users/{login}'
                 try:
-                    with urllib.request.urlopen(user_url) as user_response:
+                    with urllib.request.urlopen(user_url, timeout=15) as user_response:
                         user_data = json.loads(user_response.read().decode('utf-8'))
                         name = user_data.get('name', login)
                         bio = user_data.get('bio', '')
@@ -25,7 +33,7 @@ def fetch_contributors():
                         blog = user_data.get('blog', '')
                         followers = user_data.get('followers', 0)
                         public_repos = user_data.get('public_repos', 0)
-                except:
+                except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError):
                     name = login
                     bio = ''
                     location = ''
@@ -45,13 +53,12 @@ def fetch_contributors():
                     'followers': followers,
                     'public_repos': public_repos
                 })
-    except:
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError):
         contributors = []
     return contributors
 
+
 def index_view(request):
-    # Frontend is now separate - redirect or return API info
-    from django.http import JsonResponse
     return JsonResponse({
         'message': 'Sir Kothay API Server',
         'version': '1.0',
@@ -64,13 +71,12 @@ def index_view(request):
         }
     }, status=200)
 
+
 def about_view(request):
-    # Return contributors as JSON
-    from django.http import JsonResponse
     contributors = fetch_contributors()
     return JsonResponse({
         'project': 'Sir Kothay',
         'description': 'Leave notes when you\'re away',
-        'repository': 'https://github.com/UIU-Developers-Hub/Sir-Kothay',
+        'repository': f'https://github.com/{_contributors_repo()}',
         'contributors': contributors
     }, status=200)

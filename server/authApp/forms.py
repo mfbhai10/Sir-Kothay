@@ -41,10 +41,7 @@ class RegisterForm(forms.ModelForm):
         return confirm_password
 
     def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if ' ' in username:
-            username = username.replace(' ', '_')
-        return username
+        return self.cleaned_data.get('username')
     
 
 class UserPasswordUpdateForm(forms.Form):

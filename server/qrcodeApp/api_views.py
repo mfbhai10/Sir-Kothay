@@ -2,6 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.utils.text import slugify
+
 from .models import QRCode
 from .serializers import QRCodeSerializer
 
@@ -49,7 +51,7 @@ class QRCodeViewSet(viewsets.ModelViewSet):
         try:
             user_details = user.details
             user_data += f"\nPhone: {user_details.phone_number}\nDesignation: {user_details.designation}\nOrganization: {user_details.organization}"
-        except:
+        except Exception:
             pass
         
         qr.add_data(user_data)
@@ -66,8 +68,9 @@ class QRCodeViewSet(viewsets.ModelViewSet):
         # Get or create QR code object
         qr_code, created = QRCode.objects.get_or_create(user=user)
         
-        # Save image
-        filename = f'qr_{user.id}_{user.username}.png'
+        # Save image (filename must be filesystem-safe)
+        safe_name = slugify(str(user.username), allow_unicode=False) or 'user'
+        filename = f'qr_{user.id}_{safe_name}.png'
         qr_code.image.save(filename, ContentFile(buffer.read()), save=True)
         
         serializer = QRCodeSerializer(qr_code)

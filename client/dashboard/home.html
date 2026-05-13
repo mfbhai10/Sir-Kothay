@@ -135,6 +135,21 @@
             <h2 class="text-xl font-semibold mb-4">Add Message</h2>
             <textarea id="newMessageText" placeholder="Type your message here..."
                 class="w-full border p-2 rounded mb-3"></textarea>
+            <label for="newMessageSchedule" class="block text-sm text-gray-600 mb-1">
+                Optional schedule time
+            </label>
+            <input id="newMessageSchedule" type="datetime-local" class="w-full border p-2 rounded mb-3" />
+            <label for="newMessageDuration" class="block text-sm text-gray-600 mb-1">
+                Active duration
+            </label>
+            <select id="newMessageDuration" class="w-full border p-2 rounded mb-3">
+                <option value="">Until I change</option>
+                <option value="15">15 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="360">6 hours</option>
+                <option value="720">12 hours</option>
+                <option value="1440">24 hours</option>
+            </select>
             <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 justify-end">
                 <button type="button" onclick="closeModal('addMessageModal')"
                     class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancel</button>
@@ -150,6 +165,21 @@
             <h2 class="text-xl font-semibold mb-4">Edit Message</h2>
             <textarea id="editMessageTextarea" placeholder="Type your message here..."
                 class="w-full border p-2 rounded mb-3"></textarea>
+            <label for="editMessageSchedule" class="block text-sm text-gray-600 mb-1">
+                Optional schedule time
+            </label>
+            <input id="editMessageSchedule" type="datetime-local" class="w-full border p-2 rounded mb-3" />
+            <label for="editMessageDuration" class="block text-sm text-gray-600 mb-1">
+                Active duration
+            </label>
+            <select id="editMessageDuration" class="w-full border p-2 rounded mb-3">
+                <option value="">Until I change</option>
+                <option value="15">15 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="360">6 hours</option>
+                <option value="720">12 hours</option>
+                <option value="1440">24 hours</option>
+            </select>
             <input type="hidden" id="editMessageId">
             <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 justify-end">
                 <button type="button" onclick="closeModal('editMessageModal')"
@@ -179,6 +209,7 @@
 
 <!-- API Config -->
 <script src="../static/js/api-config.js"></script>
+<script src="../static/js/notify-modal.js"></script>
 
 <script>
 // Check if user is logged in
@@ -224,7 +255,7 @@ async function loadDashboard() {
             }
 
             // Store user slug for broadcast link
-            userSlug = data.slug || data.user_username;
+            userSlug = data.slug;
 
             // Show main content
             document.getElementById('loadingState').classList.add('hidden');
@@ -239,7 +270,10 @@ async function loadDashboard() {
         }
     } catch (error) {
         console.error('Dashboard Load Error:', error);
-        alert('Failed to load dashboard. Please clear your browser cache and login again.\n\nSteps:\n1. Press F12\n2. Type: localStorage.clear()\n3. Refresh and login again');
+        await skNotify(
+            'Failed to load dashboard. Please clear your browser cache and login again.\n\nSteps:\n1. Press F12\n2. Type: localStorage.clear()\n3. Refresh and login again',
+            { variant: 'error', title: 'Dashboard error' }
+        );
         logout();
     }
 }
@@ -257,13 +291,16 @@ async function loadMessages() {
                 <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 bg-gray-50 p-4 rounded-md shadow-sm mb-3">
                     <div class="flex-1 text-center sm:text-left">
                         <p class="text-gray-600 text-sm sm:text-base">${escapeHtml(msg.message)}</p>
-                        <p class="text-xs text-gray-400 mt-1">${msg.active ? '<span class="text-green-600 font-semibold">Active</span>' : '<span class="text-gray-500">Inactive</span>'}</p>
+                        <p class="text-xs text-gray-400 mt-1">${renderMessageStatus(msg)}</p>
+                        <p class="text-xs text-gray-400 mt-1">${renderMessageDuration(msg.duration_minutes)}</p>
+                        <p class="text-xs text-gray-400 mt-1">${renderMessageSchedule(msg.scheduled_for)}</p>
+                        <p class="text-xs text-gray-400 mt-1">${renderActiveUntil(msg.active_until)}</p>
                     </div>
                     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                         <button onclick="toggleMessageStatus(${msg.id})" class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">
                             ${msg.active ? 'Deactivate' : 'Activate'}
                         </button>
-                        <button onclick="openEditModal(${msg.id}, '${escapeHtml(msg.message).replace(/'/g, "\\'")}' )" class="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600">
+                        <button onclick="openEditModal(${msg.id}, '${escapeHtml(msg.message).replace(/'/g, "\\'")}', ${msg.scheduled_for ? `'${msg.scheduled_for}'` : 'null'}, ${msg.duration_minutes ?? 'null'} )" class="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600">
                             Edit
                         </button>
                         <button onclick="confirmDeleteMessage(${msg.id})" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
@@ -283,6 +320,50 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+function toApiDateTime(localValue) {
+    return localValue ? new Date(localValue).toISOString() : null;
+}
+
+function toLocalDateTimeInput(apiValue) {
+    if (!apiValue) return '';
+    const date = new Date(apiValue);
+    if (Number.isNaN(date.getTime())) return '';
+    const offset = date.getTimezoneOffset();
+    const local = new Date(date.getTime() - offset * 60000);
+    return local.toISOString().slice(0, 16);
+}
+
+function renderMessageSchedule(value) {
+    if (!value) return 'No schedule';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return 'Scheduled';
+    return `Scheduled: ${date.toLocaleString()}`;
+}
+
+function renderMessageStatus(msg) {
+    if (msg.active) {
+        return '<span class="text-green-600 font-semibold">Active</span>';
+    }
+    if (msg.scheduled_for) {
+        return '<span class="text-blue-600 font-semibold">Scheduled</span>';
+    }
+    return '<span class="text-gray-500">Inactive</span>';
+}
+
+function renderMessageDuration(value) {
+    if (!value) return 'Duration: Until I change';
+    if (value < 60) return `Duration: ${value} minute(s)`;
+    if (value % 60 === 0) return `Duration: ${value / 60} hour(s)`;
+    return `Duration: ${value} minutes`;
+}
+
+function renderActiveUntil(value) {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return `Active until: ${date.toLocaleString()}`;
 }
 
 // Modal functions
@@ -335,16 +416,17 @@ async function generateQRCode() {
         const data = await response.json();
 
         if (response.ok) {
-            alert('QR Code generated successfully!');
-            loadQRCode();
+            await skNotify('QR Code generated successfully!', { variant: 'success', title: 'QR code' });
+            btn.disabled = false;
+            await loadQRCode();
         } else {
-            alert(data.message || 'Failed to generate QR code');
+            await skNotify(data.message || 'Failed to generate QR code', { variant: 'error', title: 'QR code' });
             btn.disabled = false;
             btn.textContent = 'Generate';
         }
     } catch (error) {
         console.error('Error generating QR code:', error);
-        alert('Failed to generate QR code');
+        await skNotify('Failed to generate QR code', { variant: 'error', title: 'QR code' });
         const btn = document.getElementById('qrActionBtn');
         btn.disabled = false;
         btn.textContent = 'Generate';
@@ -460,13 +542,18 @@ function viewBroadcastPage() {
     if (userSlug) {
         window.open(`../broadcast/message.html?user=${userSlug}`, '_blank');
     } else {
-        alert('User slug not available');
+        skNotify('User slug not available. Reload the dashboard or update your profile.', {
+            variant: 'error',
+            title: 'Broadcast link'
+        });
     }
 }
 
 // Message functions
 async function submitNewMessage() {
     const messageText = document.getElementById('newMessageText').value;
+    const scheduleValue = document.getElementById('newMessageSchedule').value;
+    const durationValue = document.getElementById('newMessageDuration').value;
     if (messageText && messageText.trim()) {
         try {
             const response = await apiRequest(`${API_BASE_URL}/api/broadcast/messages/`, {
@@ -476,38 +563,46 @@ async function submitNewMessage() {
                 },
                 body: JSON.stringify({
                     message: messageText.trim(),
-                    active: false
+                    active: !scheduleValue,
+                    scheduled_for: toApiDateTime(scheduleValue),
+                    duration_minutes: durationValue ? parseInt(durationValue, 10) : null
                 })
             });
             const data = await response.json();
 
             if (response.ok) {
                 document.getElementById('newMessageText').value = '';
+                document.getElementById('newMessageSchedule').value = '';
+                document.getElementById('newMessageDuration').value = '';
                 closeModal('addMessageModal');
-                alert('Message added successfully!');
+                await skNotify('Message added successfully!', { variant: 'success', title: 'Messages' });
                 loadMessages();
             } else {
                 const errors = Object.values(data).flat().join(', ');
-                alert(errors || 'Failed to add message');
+                await skNotify(errors || 'Failed to add message', { variant: 'error', title: 'Messages' });
             }
         } catch (error) {
             console.error('Error adding message:', error);
-            alert('Failed to add message');
+            await skNotify('Failed to add message', { variant: 'error', title: 'Messages' });
         }
     } else {
-        alert('Please enter a message');
+        await skNotify('Please enter a message', { variant: 'info', title: 'Messages' });
     }
 }
 
-function openEditModal(id, message) {
+function openEditModal(id, message, scheduledFor, durationMinutes) {
     document.getElementById('editMessageId').value = id;
     document.getElementById('editMessageTextarea').value = message;
+    document.getElementById('editMessageSchedule').value = toLocalDateTimeInput(scheduledFor);
+    document.getElementById('editMessageDuration').value = durationMinutes || '';
     openModal('editMessageModal');
 }
 
 async function submitEditMessage() {
     const id = document.getElementById('editMessageId').value;
     const newMessage = document.getElementById('editMessageTextarea').value;
+    const scheduleValue = document.getElementById('editMessageSchedule').value;
+    const durationValue = document.getElementById('editMessageDuration').value;
     
     if (newMessage && newMessage.trim()) {
         try {
@@ -517,25 +612,28 @@ async function submitEditMessage() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    message: newMessage.trim()
+                    message: newMessage.trim(),
+                    active: !scheduleValue,
+                    scheduled_for: toApiDateTime(scheduleValue),
+                    duration_minutes: durationValue ? parseInt(durationValue, 10) : null
                 })
             });
             const data = await response.json();
 
             if (response.ok) {
                 closeModal('editMessageModal');
-                alert('Message updated successfully!');
+                await skNotify('Message updated successfully!', { variant: 'success', title: 'Messages' });
                 loadMessages();
             } else {
                 const errors = Object.values(data).flat().join(', ');
-                alert(errors || 'Failed to update message');
+                await skNotify(errors || 'Failed to update message', { variant: 'error', title: 'Messages' });
             }
         } catch (error) {
             console.error('Error updating message:', error);
-            alert('Failed to update message');
+            await skNotify('Failed to update message', { variant: 'error', title: 'Messages' });
         }
     } else {
-        alert('Please enter a message');
+        await skNotify('Please enter a message', { variant: 'info', title: 'Messages' });
     }
 }
 
@@ -547,21 +645,26 @@ async function toggleMessageStatus(id) {
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message || 'Message status updated!');
+            await skNotify(data.message || 'Message status updated!', { variant: 'success', title: 'Messages' });
             loadMessages();
         } else {
-            alert(data.message || 'Failed to update message status');
+            await skNotify(data.message || 'Failed to update message status', { variant: 'error', title: 'Messages' });
         }
     } catch (error) {
         console.error('Error toggling message:', error);
-        alert('Failed to update message status');
+        await skNotify('Failed to update message status', { variant: 'error', title: 'Messages' });
     }
 }
 
 function confirmDeleteMessage(id) {
-    if (confirm('Are you sure you want to delete this message?')) {
-        deleteMessage(id);
-    }
+    skConfirm('Are you sure you want to delete this message?', {
+        title: 'Delete message',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        danger: true
+    }).then(function (ok) {
+        if (ok) deleteMessage(id);
+    });
 }
 
 async function deleteMessage(id) {
@@ -571,15 +674,15 @@ async function deleteMessage(id) {
         });
 
         if (response.ok) {
-            alert('Message deleted successfully!');
+            await skNotify('Message deleted successfully!', { variant: 'success', title: 'Messages' });
             loadMessages();
         } else {
             const data = await response.json();
-            alert(data.message || 'Failed to delete message');
+            await skNotify(data.message || 'Failed to delete message', { variant: 'error', title: 'Messages' });
         }
     } catch (error) {
         console.error('Error deleting message:', error);
-        alert('Failed to delete message');
+        await skNotify('Failed to delete message', { variant: 'error', title: 'Messages' });
     }
 }
 

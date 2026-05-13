@@ -1,10 +1,36 @@
-# [Sir Kothay?](!https://sirkothay.pythonanywhere.com/)
+# [Sir Kothay?](https://sirkothay.pythonanywhere.com/)
 
-*"[Sir Kothay?](!https://sirkothay.pythonanywhere.com/)"* is a lightweight web application that allows users to leave messages for others via a unique, shareable URL. Each message will have a dedicated page, and a QR code will be generated for easy sharing.  
+*"Sir Kothay?"* is a lightweight web application that allows users to leave messages for others via a unique, shareable URL. Each message will have a dedicated page, and a QR code will be generated for easy sharing.
 
-The platform is built using **Django** and **Tailwind CSS**, hosted on **PythonAnywhere**. Recent updates have introduced user profiles, dashboard management, and improved UI styling.  
+The platform is built using **Django** and **Tailwind CSS**. The repository includes a **Django REST API** (`server/`) and a **static HTML client** (`client/`). You can still deploy the backend to **PythonAnywhere** or any WSGI host.
 
-## Tech Stack  
+## Run locally
+
+1. **Backend (Django)** — from the repository root on Windows:
+
+   ```powershell
+   .\scripts\run-local.ps1
+   ```
+
+   Or manually:
+
+   ```powershell
+   cd server
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   pip install -r requirements.txt
+   copy .env.example .env
+   python manage.py migrate
+   python manage.py runserver 127.0.0.1:8000
+   ```
+
+   Optional: copy `server/.env.example` to `server/.env` and set `SECRET_KEY` and `DEBUG=False` when not developing.
+
+2. **Frontend (static HTML)** — the client expects the API at `http://127.0.0.1:8000` by default (`client/static/js/api-config.js`). Open the `client/` folder in [VS Code Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) or any static server so pages are served over `http://` (not `file://`), which avoids browser CORS issues. With `DEBUG=True`, Django also allows localhost on any port via CORS regex.
+
+3. **Override API URL in production** — set `window.SIR_KOTHAY_API_BASE = 'https://your-api.example.com'` in a small inline script **before** loading `api-config.js`.
+
+## Tech Stack
 
 - **Backend:** Django (Python)  
 - **Frontend:** Tailwind CSS  

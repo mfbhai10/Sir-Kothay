@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.core.exceptions import ValidationError
 from django.db import models
-import re
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomUserManager(BaseUserManager):
@@ -22,15 +21,27 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-    USERNAME_REGEX = r'^[a-zA-Z0-9@./+/-/_ ]*$'
-
+    """
+    Display name (`username`) may contain any characters up to 150 chars.
+    Public URLs use a separate slug on UserDetails (ASCII, path-safe).
+    """
     email = models.EmailField(unique=True)
 
-    USERNAME_FIELD = 'email'  # Use email as the username
-    REQUIRED_FIELDS = ['username']  # Keep username required for creating user in admin
+    username = models.CharField(
+        _('username'),
+        max_length=150,
+        unique=True,
+        help_text=_('Required. 150 characters or fewer. Any characters are allowed.'),
+        error_messages={
+            'unique': _('A user with that username already exists.'),
+        },
+    )
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager()
-    
+
     @property
     def readable_name(self):
         return " ".join(self.username.split('_')).title()

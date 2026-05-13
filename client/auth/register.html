@@ -190,26 +190,47 @@
           password2: confirmPassword
         })
       });
-      
-      const data = await response.json();
-      
+
+      let data = null;
+      const text = await response.text();
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch (_) {
+          data = { detail: text.slice(0, 200) };
+        }
+      }
+
+      messageDiv.classList.remove('hidden');
       if (response.ok) {
-        messageDiv.classList.remove('hidden');
         messageDiv.className = 'text-green-500 text-center mb-4';
         messageDiv.textContent = 'Registration successful! Redirecting to login...';
         setTimeout(() => {
           window.location.href = 'login.html';
         }, 2000);
+        return;
+      }
+
+      messageDiv.className = 'text-red-500 text-center mb-4';
+      if (data && typeof data === 'object') {
+        const parts = [];
+        for (const v of Object.values(data)) {
+          if (Array.isArray(v)) parts.push(...v);
+          else if (v != null) parts.push(String(v));
+        }
+        messageDiv.textContent = parts.length ? parts.join(' ') : ('Registration failed (' + response.status + ').');
       } else {
-        const errors = Object.values(data).flat().join(', ');
-        messageDiv.classList.remove('hidden');
-        messageDiv.className = 'text-red-500 text-center mb-4';
-        messageDiv.textContent = errors;
+        messageDiv.textContent = 'Registration failed (' + response.status + ').';
       }
     } catch (error) {
       messageDiv.classList.remove('hidden');
       messageDiv.className = 'text-red-500 text-center mb-4';
-      messageDiv.textContent = 'Registration failed. Please try again.';
+      const msg = (error && error.message) ? String(error.message) : '';
+      if (msg.includes('fetch') || msg.includes('NetworkError')) {
+        messageDiv.textContent = 'Cannot reach the API (network/CORS). Use http:// to open this site (e.g. Live Server) and ensure Django runs at ' + API_BASE_URL + '.';
+      } else {
+        messageDiv.textContent = 'Registration failed. Please try again.';
+      }
       console.error('Error:', error);
     }
   });

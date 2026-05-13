@@ -283,7 +283,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
 
     try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch(API_ENDPOINTS.USER_DETAILS, {
+        const response = await fetch(API_ENDPOINTS.UPDATE_USER_DETAILS, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`

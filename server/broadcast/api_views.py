@@ -14,6 +14,7 @@ class BroadcastMessageViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         """Filter queryset to show user's own messages or all if staff"""
+        BroadcastMessage.activate_due_messages()
         if self.request.user.is_staff:
             return BroadcastMessage.objects.all().order_by('-id')
         return BroadcastMessage.objects.filter(user=self.request.user).order_by('-id')
@@ -25,6 +26,7 @@ class BroadcastMessageViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def my_messages(self, request):
         """Get current user's broadcast messages"""
+        BroadcastMessage.activate_due_messages(user=request.user)
         messages = BroadcastMessage.objects.filter(user=request.user).order_by('-id')
         serializer = BroadcastMessageSerializer(messages, many=True)
         return Response(serializer.data)
@@ -32,6 +34,7 @@ class BroadcastMessageViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def active_message(self, request):
         """Get current user's active broadcast message"""
+        BroadcastMessage.activate_due_messages(user=request.user)
         try:
             message = BroadcastMessage.objects.get(user=request.user, active=True)
             serializer = BroadcastMessageSerializer(message)
@@ -46,8 +49,7 @@ class BroadcastMessageViewSet(viewsets.ModelViewSet):
         if message.user != request.user and not request.user.is_staff:
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
         
-        message.active = True
-        message.save()
+        message.activate_now()
         return Response({'message': 'Message set as active'})
 
 
@@ -56,6 +58,7 @@ class BroadcastMessageViewSet(viewsets.ModelViewSet):
 def get_user_broadcast(request, user_slug):
     try:
         user_details = UserDetails.objects.select_related('user').get(_slug=user_slug)
+        BroadcastMessage.activate_due_messages(user=user_details.user)
         
         # Get active broadcast message if exists
         active_message = BroadcastMessage.objects.filter(

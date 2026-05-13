@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sir Kothay?</title>
 
-  <!-- Tailwind CSS v3 -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -16,25 +15,20 @@
 </head>
 <body>
 
-  <!-- Main Content -->
   <main class="flex-1 pt-0 md:pt-24 pb-20 md:pb-0 bg-gray-50 min-h-screen flex flex-col">
     <div class="px-4">
       <!-- Page content goes here -->
     </div>
   </main>
 
-  <!-- Fixed Bottom Navbar on Mobile, Top on Desktop -->
   <nav class="fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto z-50 bg-white/80 backdrop-blur-lg border-t md:border-b border-gray-200/50">
     <div class="max-w-5xl mx-auto">
 
-      <!-- Desktop Navbar (Top) -->
       <div class="hidden md:flex items-center justify-between px-8 py-4">
-        <!-- Logo -->
         <a href="index.html" class="flex items-center gap-3">
           <img src="./static/images/nav-logo.png" class="h-10 rounded-lg shadow-md" alt="Logo" />
         </a>
 
-        <!-- Desktop Links (will be shown/hidden by JavaScript based on auth) -->
         <div id="desktopNav" class="flex items-center gap-6 text-sm font-medium">
           <a href="index.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">Home</a>
           <a href="about.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">About</a>
@@ -46,42 +40,30 @@
         </div>
       </div>
 
-      <!-- Mobile Bottom Navbar -->
       <div class="md:hidden">
-      <div class="flex items-center justify-around py-3 bg-white border-t border-gray-200">
-        
-        <!-- Home -->
-        <a href="index.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition hover:bg-orange-50" style="color: #4b5563;">
-          <i class="bi bi-house-fill text-2xl"></i>
-          <span class="text-xs font-medium">Home</span>
-        </a>
-        
-        <!-- About -->
-        <a href="about.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition hover:bg-orange-50" style="color: #4b5563;">
-          <i class="bi bi-info-circle-fill text-2xl"></i>
-          <span class="text-xs font-medium">About</span>
-        </a>
-        
-        <!-- Login -->
-        <a href="auth/login.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:bg-orange-50 transition" style="color: #4b5563;">
-          <i class="bi bi-box-arrow-in-right text-2xl"></i>
-          <span class="text-xs font-medium">Login</span>
-        </a>
-
-        <!-- Sign Up -->
-        <a href="auth/register.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:bg-orange-50 transition">
-          <i class="bi bi-person-plus-fill text-2xl"></i>
-          <span class="text-xs font-medium">Sign Up</span>
-        </a>
-
-        <!-- GitHub -->
-        <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" target="_blank" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:text-black transition">
-          <i class="bi bi-github text-2xl"></i>
-          <span class="text-xs font-medium">GitHub</span>
-        </a>
-
+        <div class="flex items-center justify-around py-3 bg-white border-t border-gray-200">
+          <a href="index.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition hover:bg-orange-50" style="color: #4b5563;">
+            <i class="bi bi-house-fill text-2xl"></i>
+            <span class="text-xs font-medium">Home</span>
+          </a>
+          <a href="about.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition hover:bg-orange-50" style="color: #4b5563;">
+            <i class="bi bi-info-circle-fill text-2xl"></i>
+            <span class="text-xs font-medium">About</span>
+          </a>
+          <a href="auth/login.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:bg-orange-50 transition" style="color: #4b5563;">
+            <i class="bi bi-box-arrow-in-right text-2xl"></i>
+            <span class="text-xs font-medium">Login</span>
+          </a>
+          <a href="auth/register.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:bg-orange-50 transition">
+            <i class="bi bi-person-plus-fill text-2xl"></i>
+            <span class="text-xs font-medium">Sign Up</span>
+          </a>
+          <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" target="_blank" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:text-black transition">
+            <i class="bi bi-github text-2xl"></i>
+            <span class="text-xs font-medium">GitHub</span>
+          </a>
+        </div>
       </div>
-    </div>
     </div>
   </nav>
 
@@ -90,28 +72,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
         <div>
           <div class="flex items-center gap-3 mb-4">
-            <img src="{% static 'images/nav-logo.png' %}" class="h-10 rounded-lg" alt="Logo">
-            <span class="text-2xl font-bold text-white">Sir Kothay?</span>
-          </div>
-          <p class="text-gray-400">Simple notes. Strong bonds.</p>
-        </div>
-
-        <div>
-          <h4 class="font-semibold text-white mb-4">Quick Links</h4>
-          <ul class="space-y-2 text-gray-400">
-            <li><a href="{% url 'index' %}#features" class="hover:text-white transition">Features</a></li>
-            <li><a href="{% url 'about' %}" class="hover:text-white transition">About Us</a></li>
-            <li><a href="{% url 'register' %}" class="hover:text-white transition">Sign Up</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="font-semibold text-white mb-4">Connect</h4>
-          <div class="flex gap-4">
-            <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" class="text-2xl hover:text-white transition">
-              <i class="bi bi-github"></i>
-            </a>
-            <a href="h./static/images/nav-logo.png" class="h-10 rounded-lg" alt="Logo">
+            <img src="./static/images/nav-logo.png" class="h-10 rounded-lg" alt="Logo">
             <span class="text-2xl font-bold text-white">Sir Kothay?</span>
           </div>
           <p class="text-gray-400">Simple notes. Strong bonds.</p>
@@ -138,26 +99,19 @@
           </div>
           <div class="flex items-center gap-2 mt-6 text-sm">
             <img src="https://github.com/UIU-Developers-Hub.png" class="h-8 w-8 rounded-full" alt="UIU Developers Hub">
-            <span>© 2025 Sir Kothay. Made with ❤️ by <a href="https://github.com/UIU-Developers-Hub" style="color: #f68b1f;" class="hover:underline">UIU Developers Hub</a></span>
+            <span>© 2026 Sir Kothay. Made with ❤️ by <a href="https://github.com/UIU-Developers-Hub" style="color: #f68b1f;" class="hover:underline">UIU Developers Hub</a></span>
           </div>
-          <div id="contributorAvatars" class="flex gap-2 mt-2">
-            <!-- Contributors will be loaded dynamically -->
-          </div>
+          <div id="contributorAvatars" class="flex gap-2 mt-2"></div>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- API Config -->
   <script src="./static/js/api-config.js"></script>
-
-  <!-- Navigation Authentication Check -->
   <script>
-    // Check if user is logged in
     const isAuthenticated = !!localStorage.getItem('access_token');
-    
+
     if (isAuthenticated) {
-      // Update navigation for authenticated users
       const desktopNav = document.getElementById('desktopNav');
       if (desktopNav) {
         desktopNav.innerHTML = `
@@ -177,15 +131,13 @@
       window.location.href = 'index.html';
     }
 
-    // Load contributors for footer
     async function loadFooterContributors() {
       try {
-        const response = await fetch('https://api.github.com/repos/UIU-Developers-Hub/Sir-Kothay/contributors');
+        const response = await fetch(window.sirKothayContributorsApiUrl());
         const contributors = await response.json();
-        
         const container = document.getElementById('contributorAvatars');
         if (container) {
-          container.innerHTML = contributors.slice(0, 6).map(c => 
+          container.innerHTML = contributors.slice(0, 6).map(c =>
             `<a href="${c.html_url}" target="_blank">
               <img src="${c.avatar_url}" class="h-8 w-8 rounded-full" alt="${c.login}">
             </a>`
@@ -197,4 +149,6 @@
     }
 
     loadFooterContributors();
-  </script
+  </script>
+</body>
+</html>
