@@ -9,12 +9,18 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
     body { font-family: 'Poppins', sans-serif; }
+    #broadcastMessagePanel:focus {
+      outline: none;
+    }
+    #broadcastMessagePanel:focus-visible {
+      box-shadow: 0 0 0 4px rgba(246, 139, 31, 0.55), 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Fixed Bottom Navbar on Mobile, Top on Desktop -->
-  <nav class="fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto z-50 bg-white/80 backdrop-blur-lg border-t md:border-b border-gray-200/50">
+  <!-- Fixed Bottom Navbar on Mobile, Top on Desktop (hidden for guests) -->
+  <nav id="broadcastNav" class="fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto z-50 bg-white/80 backdrop-blur-lg border-t md:border-b border-gray-200/50">
     <div class="max-w-5xl mx-auto">
 
       <!-- Desktop Navbar (Top) -->
@@ -37,7 +43,7 @@
       </div>
 
       <!-- Mobile Bottom Navbar -->
-      <div class="md:hidden">
+      <div class="md:hidden" id="mobileNavRoot">
         <div class="flex items-center justify-around py-3 bg-white border-t border-gray-200">
           
           <!-- Home -->
@@ -76,7 +82,7 @@
   </nav>
 
   <!-- Main Content -->
-  <main class="pt-0 md:pt-24 pb-20 md:pb-0 min-h-screen">
+  <main id="broadcastMain" class="pt-0 md:pt-24 pb-20 md:pb-0 min-h-screen">
 <div class="min-h-screen flex items-center justify-center p-4" style="background: linear-gradient(to bottom right, #fef3e8, #ffe8d1, #ffdab3);">
   <div class="w-full max-w-sm">
     <!-- Card -->
@@ -85,6 +91,21 @@
         <div class="relative inline-block">
             <img id="userImage" src="../static/images/image.png" alt="User" class="w-12 h-12 rounded-lg ring-8 ring-white/30 shadow-2xl object-cover">
             <h1 id="userName" class="mt-4 text-2xl font-bold tracking-tight">Loading...</h1>
+        </div>
+      </div>
+
+      <!-- Broadcast message (above contact details — primary focus) -->
+      <div id="broadcastSection" class="hidden px-6 py-6" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #ffe4cc 100%);">
+        <p class="text-xs font-semibold uppercase tracking-wider text-orange-800/80 text-center mb-3">Active message</p>
+        <div
+          id="broadcastMessagePanel"
+          tabindex="0"
+          role="region"
+          aria-label="Broadcast message"
+          class="rounded-2xl p-5 border-2 border-orange-400 bg-white shadow-lg ring-2 ring-orange-200/80"
+        >
+          <p id="broadcastMessage" class="text-gray-900 font-semibold leading-relaxed text-center text-base md:text-lg">
+          </p>
         </div>
       </div>
 
@@ -145,14 +166,6 @@
           </button>
         </div>
       </div>
-
-      <!-- Broadcast Message -->
-      <div id="broadcastSection" class="hidden px-6 py-5" style="background: linear-gradient(to right, #f68b1f, #f68b1f);">
-        <div class="bg-white/20 backdrop-blur-md rounded-2xl p-5 border border-white/30">
-          <p id="broadcastMessage" class="text-white font-medium leading-relaxed text-center">
-          </p>
-        </div>
-      </div>
     </div>
 
   </div>
@@ -192,6 +205,7 @@
         if (data.active_message) {
           document.getElementById('broadcastMessage').textContent = data.active_message;
           document.getElementById('broadcastSection').classList.remove('hidden');
+          focusBroadcastMessage();
         }
 
         // Setup copy buttons
@@ -219,7 +233,8 @@
         <small>Error: ${errorMsg}</small>
       `;
       document.getElementById('broadcastSection').classList.remove('hidden');
-      
+      focusBroadcastMessage();
+
       console.error(`
 ╔════════════════════════════════════════════════════════════════╗
 ║                    MISSING API ENDPOINT                        ║
@@ -249,6 +264,42 @@
       `);
     }
 
+    function focusBroadcastMessage() {
+      var section = document.getElementById('broadcastSection');
+      var panel = document.getElementById('broadcastMessagePanel');
+      if (!section || !panel || section.classList.contains('hidden')) {
+        return;
+      }
+      section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      window.setTimeout(function () {
+        try {
+          panel.focus({ preventScroll: true });
+        } catch (e) {
+          panel.focus();
+        }
+      }, 450);
+    }
+
+    (function applyBroadcastNavLayout() {
+      var authed = !!localStorage.getItem('access_token');
+      var nav = document.getElementById('broadcastNav');
+      var main = document.getElementById('broadcastMain');
+      var footer = document.querySelector('body > footer');
+      if (!authed) {
+        if (nav) {
+          nav.classList.add('hidden');
+        }
+        if (main) {
+          main.classList.remove('md:pt-24', 'pb-20', 'md:pb-0');
+          main.classList.add('pb-0', 'md:pt-0');
+        }
+        if (footer) {
+          footer.classList.remove('mb-20');
+          footer.classList.add('mb-4');
+        }
+      }
+    })();
+
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
         const toast = document.createElement('div');
@@ -262,7 +313,6 @@
     // Load data on page load
     loadUserData();
 
-    // Check authentication and update nav
     const isAuthenticated = !!localStorage.getItem('access_token');
     if (isAuthenticated) {
       const desktopNav = document.getElementById('desktopNav');
@@ -270,10 +320,33 @@
         desktopNav.innerHTML = `
           <a href="../dashboard/home.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">Dashboard</a>
           <a href="../dashboard/profile.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">Profile</a>
-          <a href="#" onclick="logoutUser()" class="text-red-600 hover:text-red-700">Logout</a>
+          <a href="#" onclick="logoutUser(); return false;" class="text-red-600 hover:text-red-700">Logout</a>
           <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" target="_blank" class="text-gray-600 hover:text-black">
             <i class="bi bi-github text-xl"></i>
           </a>
+        `;
+      }
+      const mobileRoot = document.getElementById('mobileNavRoot');
+      if (mobileRoot) {
+        mobileRoot.innerHTML = `
+          <div class="flex items-center justify-around py-3 bg-white border-t border-gray-200">
+            <a href="../dashboard/home.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition bg-orange-50" style="color: #f68b1f;">
+              <i class="bi bi-speedometer2 text-2xl"></i>
+              <span class="text-xs font-medium">Dashboard</span>
+            </a>
+            <a href="../dashboard/profile.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition hover:bg-orange-50" style="color: #4b5563;">
+              <i class="bi bi-person-circle text-2xl"></i>
+              <span class="text-xs font-medium">Profile</span>
+            </a>
+            <a href="#" onclick="logoutUser(); return false;" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 transition">
+              <i class="bi bi-box-arrow-right text-2xl"></i>
+              <span class="text-xs font-medium">Logout</span>
+            </a>
+            <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" target="_blank" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:text-black transition">
+              <i class="bi bi-github text-2xl"></i>
+              <span class="text-xs font-medium">GitHub</span>
+            </a>
+          </div>
         `;
       }
     }

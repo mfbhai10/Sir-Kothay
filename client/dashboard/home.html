@@ -577,7 +577,8 @@ async function downloadQRWithInfo() {
         var qrSize = 300;
         var qrY = 150;
         var qrX = (canvas.width - qrSize) / 2;
-        var infoY = qrY + qrSize + 50;
+        var taglineY = qrY + qrSize + 26;
+        var infoY = qrY + qrSize + 56;
         var mainBottom = infoY + 180;
         canvas.height = Math.ceil(mainBottom + 24 + Math.max(footerDrawH, 1) + 16);
 
@@ -597,6 +598,11 @@ async function downloadQRWithInfo() {
         ctx.fillText(userName, canvas.width / 2, 70);
 
         ctx.drawImage(qrDrawable, qrX, qrY, qrSize, qrSize);
+
+        ctx.fillStyle = '#4b5563';
+        ctx.font = '600 17px Poppins, Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Scan QR code to know where I am', canvas.width / 2, taglineY);
 
         ctx.fillStyle = '#333333';
         ctx.font = 'bold 20px Poppins, Arial';
