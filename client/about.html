@@ -1,279 +1,470 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About | Sir Kothay</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <style>
-    body { font-family: 'Poppins', sans-serif; }
-    .brand-color { color: #f68b1f; }
-    .brand-bg { background-color: #f68b1f; }
-    .hover-scale { transition: transform 0.2s ease-in-out; }
-    .hover-scale:hover { transform: scale(1.05); }
-  </style>
-</head>
-<body class="bg-gray-50">
-
-  <!-- Fixed Bottom Navbar on Mobile, Top on Desktop -->
-  <nav class="fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto z-50 bg-white/80 backdrop-blur-lg border-t md:border-b border-gray-200/50">
-    <div class="max-w-5xl mx-auto">
-
-      <!-- Desktop Navbar (Top) -->
-      <div class="hidden md:flex items-center justify-between px-8 py-4">
-        <!-- Logo -->
-        <a href="index.html" class="flex items-center gap-3">
-          <img src="./static/images/nav-logo.png" class="h-10 rounded-lg shadow-md" alt="Logo" />
-        </a>
-
-        <!-- Desktop Links -->
-        <div id="desktopNav" class="flex items-center gap-6 text-sm font-medium">
-          <a href="index.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">Home</a>
-          <a href="about.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">About</a>
-          <a href="auth/login.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">Login</a>
-          <a href="auth/register.html" class="px-5 py-2 text-white rounded-lg" style="background-color: #f68b1f;" onmouseover="this.style.backgroundColor='#e67a0f'" onmouseout="this.style.backgroundColor='#f68b1f'">Sign Up</a>
-          <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" target="_blank" class="text-gray-600 hover:text-black">
-            <i class="bi bi-github text-xl"></i>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About | Sir Kothay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+      .brand-color {
+        color: #f68b1f;
+      }
+      .brand-bg {
+        background-color: #f68b1f;
+      }
+      .hover-scale {
+        transition: transform 0.2s ease-in-out;
+      }
+      .hover-scale:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Fixed Bottom Navbar on Mobile, Top on Desktop -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto z-50 bg-white/80 backdrop-blur-lg border-t md:border-b border-gray-200/50"
+    >
+      <div class="max-w-5xl mx-auto">
+        <!-- Desktop Navbar (Top) -->
+        <div class="hidden md:flex items-center justify-between px-8 py-4">
+          <!-- Logo -->
+          <a href="index.html" class="flex items-center gap-3">
+            <img
+              src="./static/images/nav-logo.png"
+              class="h-10 rounded-lg shadow-md"
+              alt="Logo"
+            />
           </a>
+
+          <!-- Desktop Links -->
+          <div
+            id="desktopNav"
+            class="flex items-center gap-6 text-sm font-medium"
+          >
+            <a
+              href="index.html"
+              class="text-gray-700"
+              style="transition: color 0.2s"
+              onmouseover="this.style.color = '#f68b1f'"
+              onmouseout="this.style.color = ''"
+              >Home</a
+            >
+            <a
+              href="about.html"
+              class="text-gray-700"
+              style="transition: color 0.2s"
+              onmouseover="this.style.color = '#f68b1f'"
+              onmouseout="this.style.color = ''"
+              >About</a
+            >
+            <a
+              href="auth/login.html"
+              class="text-gray-700"
+              style="transition: color 0.2s"
+              onmouseover="this.style.color = '#f68b1f'"
+              onmouseout="this.style.color = ''"
+              >Login</a
+            >
+            <a
+              href="auth/register.html"
+              class="px-5 py-2 text-white rounded-lg"
+              style="background-color: #f68b1f"
+              onmouseover="this.style.backgroundColor = '#e67a0f'"
+              onmouseout="this.style.backgroundColor = '#f68b1f'"
+              >Sign Up</a
+            >
+            <a
+              href="https://github.com/UIU-Developers-Hub/Sir-Kothay"
+              target="_blank"
+              class="text-gray-600 hover:text-black"
+            >
+              <i class="bi bi-github text-xl"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Bottom Navbar -->
+        <div class="md:hidden">
+          <div
+            class="flex items-center justify-around py-3 bg-white border-t border-gray-200"
+          >
+            <!-- Home -->
+            <a
+              href="index.html"
+              class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition bg-orange-50"
+              style="color: #f68b1f"
+            >
+              <i class="bi bi-house-fill text-2xl"></i>
+              <span class="text-xs font-medium">Home</span>
+            </a>
+
+            <!-- About -->
+            <a
+              href="about.html"
+              class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition hover:bg-orange-50"
+              style="color: #4b5563"
+            >
+              <i class="bi bi-info-circle-fill text-2xl"></i>
+              <span class="text-xs font-medium">About</span>
+            </a>
+
+            <!-- Login -->
+            <a
+              href="auth/login.html"
+              class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:bg-orange-50 transition"
+              style="color: #4b5563"
+            >
+              <i class="bi bi-box-arrow-in-right text-2xl"></i>
+              <span class="text-xs font-medium">Login</span>
+            </a>
+
+            <!-- Sign Up -->
+            <a
+              href="auth/register.html"
+              class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:bg-orange-50 transition"
+            >
+              <i class="bi bi-person-plus-fill text-2xl"></i>
+              <span class="text-xs font-medium">Sign Up</span>
+            </a>
+
+            <!-- GitHub -->
+            <a
+              href="https://github.com/UIU-Developers-Hub/Sir-Kothay"
+              target="_blank"
+              class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:text-black transition"
+            >
+              <i class="bi bi-github text-2xl"></i>
+              <span class="text-xs font-medium">GitHub</span>
+            </a>
+          </div>
         </div>
       </div>
+    </nav>
 
-      <!-- Mobile Bottom Navbar -->
-      <div class="md:hidden">
-        <div class="flex items-center justify-around py-3 bg-white border-t border-gray-200">
-          
-          <!-- Home -->
-          <a href="index.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition hover:bg-orange-50" style="color: #4b5563;">
-            <i class="bi bi-house-fill text-2xl"></i>
-            <span class="text-xs font-medium">Home</span>
-          </a>
-          
-          <!-- About -->
-          <a href="about.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition bg-orange-50" style="color: #f68b1f;">
-            <i class="bi bi-info-circle-fill text-2xl"></i>
-            <span class="text-xs font-medium">About</span>
-          </a>
-          
-          <!-- Login -->
-          <a href="auth/login.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:bg-orange-50 transition" style="color: #4b5563;">
-            <i class="bi bi-box-arrow-in-right text-2xl"></i>
-            <span class="text-xs font-medium">Login</span>
-          </a>
+    <!-- Main Content -->
+    <main class="pt-0 md:pt-24 pb-20 md:pb-0 min-h-screen">
+      <div class="container mx-auto px-6 py-12">
+        <section class="bg-white">
+          <h2 class="text-4xl font-bold mb-8 brand-color text-center">
+            About Sir Kothay
+          </h2>
+          <p class="text-gray-700 mb-8 text-lg text-center">
+            <span class="font-bold brand-color">"Sir Kothay Achen"</span> is a
+            lightweight web application designed to make sharing messages simple
+            and efficient. Whether you want to leave a quick note, share a
+            thought, or send a message to someone,
+            <span class="font-bold brand-color">Sir Kothay</span> provides a
+            unique, shareable URL and a QR code for easy access.
+          </p>
 
-          <!-- Sign Up -->
-          <a href="auth/register.html" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:bg-orange-50 transition">
-            <i class="bi bi-person-plus-fill text-2xl"></i>
-            <span class="text-xs font-medium">Sign Up</span>
-          </a>
-
-          <!-- GitHub -->
-          <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" target="_blank" class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-gray-600 hover:text-black transition">
-            <i class="bi bi-github text-2xl"></i>
-            <span class="text-xs font-medium">GitHub</span>
-          </a>
-
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Main Content -->
-  <main class="pt-0 md:pt-24 pb-20 md:pb-0 min-h-screen">
-    <div class="container mx-auto px-6 py-12">
-    <section class="bg-white">
-        <h2 class="text-4xl font-bold mb-8 brand-color text-center">About Sir Kothay</h2>
-        <p class="text-gray-700 mb-8 text-lg text-center">
-            <span class="font-bold brand-color">"Sir Kothay Achen"</span> is a lightweight web application designed to make sharing messages simple and efficient. Whether you want to leave a quick note, share a thought, or send a message to someone, <span class="font-bold brand-color">Sir Kothay</span> provides a unique, shareable URL and a QR code for easy access.
-        </p>
-
-        <!-- How It Works Section -->
-        <div class="mb-12">
-            <h3 class="text-3xl font-bold mb-6 brand-color text-center">How It Works</h3>
+          <!-- How It Works Section -->
+          <div class="mb-12">
+            <h3 class="text-3xl font-bold mb-6 brand-color text-center">
+              How It Works
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">1. Create a Message</h4>
-                    <p class="text-gray-700">Write your message on the home page and save it.</p>
-                </div>
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">2. Generate a Unique URL</h4>
-                    <p class="text-gray-700">Each message gets a dedicated page with a unique URL.</p>
-                </div>
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">3. Share via QR Code</h4>
-                    <p class="text-gray-700">A QR code is automatically generated for quick sharing.</p>
-                </div>
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">4. View the Message</h4>
-                    <p class="text-gray-700">Anyone with the link or QR code can view your message instantly.</p>
-                </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">
+                  1. Create a Message
+                </h4>
+                <p class="text-gray-700">
+                  Write your message on the home page and save it.
+                </p>
+              </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">
+                  2. Generate a Unique URL
+                </h4>
+                <p class="text-gray-700">
+                  Each message gets a dedicated page with a unique URL.
+                </p>
+              </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">
+                  3. Share via QR Code
+                </h4>
+                <p class="text-gray-700">
+                  A QR code is automatically generated for quick sharing.
+                </p>
+              </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">
+                  4. View the Message
+                </h4>
+                <p class="text-gray-700">
+                  Anyone with the link or QR code can view your message
+                  instantly.
+                </p>
+              </div>
             </div>
-        </div>
+          </div>
 
-        <!-- Tech Stack Section -->
-        <div class="mb-12">
-            <h3 class="text-3xl font-bold mb-6 brand-color text-center">Tech Stack</h3>
+          <!-- Tech Stack Section -->
+          <div class="mb-12">
+            <h3 class="text-3xl font-bold mb-6 brand-color text-center">
+              Tech Stack
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">Backend</h4>
-                    <p class="text-gray-700">Django (Python)</p>
-                </div>
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">Frontend</h4>
-                    <p class="text-gray-700">Tailwind CSS</p>
-                </div>
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">Database</h4>
-                    <p class="text-gray-700">SQLite (initially, can be upgraded)</p>
-                </div>
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">Hosting</h4>
-                    <p class="text-gray-700">PythonAnywhere</p>
-                </div>
-                <div class="bg-gray-100 p-6 rounded-lg hover-scale">
-                    <h4 class="text-xl font-bold mb-4 brand-color">Additional Features</h4>
-                    <p class="text-gray-700">QR Code Generation</p>
-                </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">Backend</h4>
+                <p class="text-gray-700">Django (Python)</p>
+              </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">Frontend</h4>
+                <p class="text-gray-700">Tailwind CSS</p>
+              </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">Database</h4>
+                <p class="text-gray-700">SQLite (initially, can be upgraded)</p>
+              </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">Hosting</h4>
+                <p class="text-gray-700">PythonAnywhere</p>
+              </div>
+              <div class="bg-gray-100 p-6 rounded-lg hover-scale">
+                <h4 class="text-xl font-bold mb-4 brand-color">
+                  Additional Features
+                </h4>
+                <p class="text-gray-700">QR Code Generation</p>
+              </div>
             </div>
-        </div>
+          </div>
 
-        <!-- Core Features Section -->
-        <div class="mb-12">
-            <h3 class="text-3xl font-bold mb-6 brand-color text-center">Core Features (Phase 1)</h3>
+          <!-- Core Features Section -->
+          <div class="mb-12">
+            <h3 class="text-3xl font-bold mb-6 brand-color text-center">
+              Core Features (Phase 1)
+            </h3>
             <ul class="list-disc list-inside text-gray-700 mb-6">
-                <li class="mb-2"><span class="font-bold">Message Creation</span>: Write and save your message.</li>
-                <li class="mb-2"><span class="font-bold">Unique URL Generation</span>: Each message gets a unique link.</li>
-                <li class="mb-2"><span class="font-bold">QR Code Support</span>: Share messages easily with a QR code.</li>
-                <li class="mb-2"><span class="font-bold">Message Viewing</span>: Anyone with the link can view the message.</li>
-                <li class="mb-2"><span class="font-bold">User Profiles</span>: Register and manage your messages.</li>
+              <li class="mb-2">
+                <span class="font-bold">Message Creation</span>: Write and save
+                your message.
+              </li>
+              <li class="mb-2">
+                <span class="font-bold">Unique URL Generation</span>: Each
+                message gets a unique link.
+              </li>
+              <li class="mb-2">
+                <span class="font-bold">QR Code Support</span>: Share messages
+                easily with a QR code.
+              </li>
+              <li class="mb-2">
+                <span class="font-bold">Message Viewing</span>: Anyone with the
+                link can view the message.
+              </li>
+              <li class="mb-2">
+                <span class="font-bold">User Profiles</span>: Register and
+                manage your messages.
+              </li>
             </ul>
-        </div>
+          </div>
 
-        <!-- Future Enhancements Section -->
-        <div class="mb-12">
-            <h3 class="text-3xl font-bold mb-6 brand-color text-center">Future Enhancements (Phase 2 & Beyond)</h3>
+          <!-- Future Enhancements Section -->
+          <div class="mb-12">
+            <h3 class="text-3xl font-bold mb-6 brand-color text-center">
+              Future Enhancements (Phase 2 & Beyond)
+            </h3>
             <ul class="list-disc list-inside text-gray-700 mb-6">
-                <li class="mb-2"><span class="font-bold">Scheduling Messages</span>: Set messages to appear at specific times.</li>
-                <li class="mb-2"><span class="font-bold">Messaging System</span>: Send direct messages to other users.</li>
-                <li class="mb-2"><span class="font-bold">Dashboard (`/dashboard/`)</span>: Manage all your messages in one place.</li>
+              <li class="mb-2">
+                <span class="font-bold">Scheduling Messages</span>: Set messages
+                to appear at specific times.
+              </li>
+              <li class="mb-2">
+                <span class="font-bold">Messaging System</span>: Send direct
+                messages to other users.
+              </li>
+              <li class="mb-2">
+                <span class="font-bold">Dashboard (`/dashboard/`)</span>: Manage
+                all your messages in one place.
+              </li>
             </ul>
-        </div>
+          </div>
 
-        <!-- Contributors Section -->
-        <div class="mb-12">
-            <h3 class="text-3xl font-bold mb-6 brand-color text-center">Our Contributors</h3>
-            <div id="contributorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <p class="text-center text-gray-500 col-span-full">Loading contributors...</p>
+          <!-- Contributors Section -->
+          <div class="mb-12">
+            <h3 class="text-3xl font-bold mb-6 brand-color text-center">
+              Our Contributors
+            </h3>
+            <div
+              id="contributorsGrid"
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              <p class="text-center text-gray-500 col-span-full">
+                Loading contributors...
+              </p>
             </div>
-        </div>
-
-        <!-- Conclusion Section -->
-        <h3 class="text-3xl font-bold mb-6 brand-color text-center">Conclusion</h3>
-        <p class="text-gray-700 mb-6 text-lg text-center">
-            <span class="font-bold brand-color">"Sir Kothay Achen"</span> is your go-to platform for sharing messages quickly and efficiently. With its unique URLs, QR codes, and user-friendly design, it's perfect for both personal and professional use. Stay tuned for exciting updates like <span class="font-bold">scheduling, direct messaging, and a user dashboard</span>!
-        </p>
-
-        <!-- Back Button -->
-        <div class="text-center mt-8">
-            <a href="index.html" class="inline-block px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-bold rounded-lg transition">
-                Back to Home
-            </a>
-        </div>
-    </section>
-    </div>
-  </main>
-
-  <footer class="py-12 px-6 mt-4 mb-20 md:mb-4 bg-gray-900 text-gray-300">
-    <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-        <div>
-          <div class="flex items-center gap-3 mb-4">
-            <img src="./static/images/nav-logo.png" class="h-10 rounded-lg" alt="Logo">
-            <span class="text-2xl font-bold text-white">Sir Kothay?</span>
           </div>
-          <p class="text-gray-400">Simple notes. Strong bonds.</p>
-        </div>
 
-        <div>
-          <h4 class="font-semibold text-white mb-4">Quick Links</h4>
-          <ul class="space-y-2 text-gray-400">
-            <li><a href="index.html#features" class="hover:text-white transition">Features</a></li>
-            <li><a href="about.html" class="hover:text-white transition">About Us</a></li>
-            <li><a href="auth/register.html" class="hover:text-white transition">Sign Up</a></li>
-          </ul>
-        </div>
+          <!-- Conclusion Section -->
+          <h3 class="text-3xl font-bold mb-6 brand-color text-center">
+            Conclusion
+          </h3>
+          <p class="text-gray-700 mb-6 text-lg text-center">
+            <span class="font-bold brand-color">"Sir Kothay Achen"</span> is
+            your go-to platform for sharing messages quickly and efficiently.
+            With its unique URLs, QR codes, and user-friendly design, it's
+            perfect for both personal and professional use. Stay tuned for
+            exciting updates like
+            <span class="font-bold"
+              >scheduling, direct messaging, and a user dashboard</span
+            >!
+          </p>
 
-        <div>
-          <h4 class="font-semibold text-white mb-4">Connect</h4>
-          <div class="flex gap-4">
-            <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" class="text-2xl hover:text-white transition">
-              <i class="bi bi-github"></i>
-            </a>
-            <a href="https://www.facebook.com/uiudevelopershub" class="text-2xl hover:text-white transition">
-              <i class="bi bi-facebook"></i>
+          <!-- Back Button -->
+          <div class="text-center mt-8">
+            <a
+              href="index.html"
+              class="inline-block px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-bold rounded-lg transition"
+            >
+              Back to Home
             </a>
           </div>
-          <div class="flex items-center gap-2 mt-6 text-sm">
-            <img src="https://github.com/UIU-Developers-Hub.png" class="h-8 w-8 rounded-full" alt="UIU Developers Hub">
-            <span>© 2026 Sir Kothay. Made with ❤️ by <a href="https://github.com/UIU-Developers-Hub" style="color: #f68b1f;" class="hover:underline">UIU Developers Hub</a></span>
+        </section>
+      </div>
+    </main>
+
+    <footer class="py-12 px-6 mt-4 mb-20 md:mb-0 bg-gray-900 text-gray-300">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div class="md:flex md:flex-col md:items-center md:text-center">
+            <div class="flex items-center gap-3 mb-4 md:justify-center">
+              <img
+                src="./static/images/nav-logo.png"
+                class="h-10 rounded-lg"
+                alt="Logo"
+              />
+              <span class="text-2xl font-bold text-white">Sir Kothay?</span>
+            </div>
+            <p class="text-gray-400">Simple notes. Strong bonds.</p>
           </div>
-          <div id="contributorAvatarsFooter" class="flex gap-2 mt-2">
-            <!-- Contributors will be loaded dynamically -->
+
+          <div class="md:flex md:flex-col md:items-center md:text-center">
+            <h4 class="font-semibold text-white mb-4">Quick Links</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a
+                  href="index.html#features"
+                  class="hover:text-white transition"
+                  >Features</a
+                >
+              </li>
+              <li>
+                <a href="about.html" class="hover:text-white transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="auth/register.html" class="hover:text-white transition"
+                  >Sign Up</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div class="md:flex md:flex-col md:items-center md:text-center">
+            <h4 class="font-semibold text-white mb-4">Connect</h4>
+            <div class="flex gap-4 justify-left md:justify-center">
+              <a
+                href="https://github.com/UIU-Developers-Hub/Sir-Kothay"
+                class="text-2xl hover:text-white transition"
+              >
+                <i class="bi bi-github"></i>
+              </a>
+              <a
+                href="https://www.facebook.com/uiudevelopershub"
+                class="text-2xl hover:text-white transition"
+              >
+                <i class="bi bi-facebook"></i>
+              </a>
+            </div>
+            <div class="flex items-center gap-2 mt-6 text-sm justify-left md:justify-center">
+              <img
+                src="https://github.com/UIU-Developers-Hub.png"
+                class="h-8 w-8 rounded-full"
+                alt="UIU Developers Hub"
+              />
+              <span
+                >© 2026 Sir Kothay. Made with ❤️ by
+                <a
+                  href="https://github.com/UIU-Developers-Hub"
+                  style="color: #f68b1f"
+                  class="hover:underline"
+                  >UIU Developers Hub</a
+                ></span
+              >
+            </div>
+            <div id="contributorAvatarsFooter" class="flex gap-2 mt-2">
+              <!-- Contributors will be loaded dynamically -->
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <!-- API Config -->
-  <script src="./static/js/api-config.js"></script>
+    <!-- API Config -->
+    <script src="./static/js/api-config.js"></script>
 
-  <!-- Navigation Authentication Check -->
-  <script>
-    async function loadContributors() {
-      try {
-        const response = await fetch(window.sirKothayContributorsApiUrl());
-        const contributors = await response.json();
-        const grid = document.getElementById('contributorsGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
-        for (const contributor of contributors) {
-          const userResponse = await fetch(`https://api.github.com/users/${contributor.login}`);
-          const userDetails = await userResponse.json();
-          const div = document.createElement('div');
-          div.className = 'bg-gray-100 p-6 rounded-lg hover-scale text-center';
-          div.innerHTML = `
+    <!-- Navigation Authentication Check -->
+    <script>
+      async function loadContributors() {
+        try {
+          const response = await fetch(window.sirKothayContributorsApiUrl());
+          const contributors = await response.json();
+          const grid = document.getElementById("contributorsGrid");
+          if (!grid) return;
+          grid.innerHTML = "";
+          for (const contributor of contributors) {
+            const userResponse = await fetch(
+              `https://api.github.com/users/${contributor.login}`,
+            );
+            const userDetails = await userResponse.json();
+            const div = document.createElement("div");
+            div.className =
+              "bg-gray-100 p-6 rounded-lg hover-scale text-center";
+            div.innerHTML = `
                 <img src="${userDetails.avatar_url}" alt="${userDetails.name || contributor.login}" class="w-20 h-20 rounded-full mx-auto mb-4">
                 <h4 class="text-xl font-bold mb-2 brand-color">${userDetails.name || contributor.login}</h4>
-                <p class="text-gray-700 mb-2">${userDetails.bio || 'No bio available'}</p>
-                ${userDetails.location ? `<p class="text-gray-600 text-sm"><i class="bi bi-geo-alt"></i> ${userDetails.location}</p>` : ''}
-                ${userDetails.company ? `<p class="text-gray-600 text-sm"><i class="bi bi-building"></i> ${userDetails.company}</p>` : ''}
+                <p class="text-gray-700 mb-2">${userDetails.bio || "No bio available"}</p>
+                ${userDetails.location ? `<p class="text-gray-600 text-sm"><i class="bi bi-geo-alt"></i> ${userDetails.location}</p>` : ""}
+                ${userDetails.company ? `<p class="text-gray-600 text-sm"><i class="bi bi-building"></i> ${userDetails.company}</p>` : ""}
                 <div class="flex justify-center gap-4 mt-4 text-sm text-gray-600">
                     <span><i class="bi bi-people"></i> ${userDetails.followers} followers</span>
                     <span><i class="bi bi-folder"></i> ${userDetails.public_repos} repos</span>
                 </div>
                 <a href="${userDetails.html_url}" target="_blank" class="inline-block mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">View Profile</a>
             `;
-          grid.appendChild(div);
-        }
-      } catch (error) {
-        console.error('Error loading contributors:', error);
-        const grid = document.getElementById('contributorsGrid');
-        if (grid) {
-          grid.innerHTML = '<p class="text-center text-red-500 col-span-full">Failed to load contributors</p>';
+            grid.appendChild(div);
+          }
+        } catch (error) {
+          console.error("Error loading contributors:", error);
+          const grid = document.getElementById("contributorsGrid");
+          if (grid) {
+            grid.innerHTML =
+              '<p class="text-center text-red-500 col-span-full">Failed to load contributors</p>';
+          }
         }
       }
-    }
 
-    // Check if user is logged in
-    const isAuthenticated = !!localStorage.getItem('access_token');
-    
-    if (isAuthenticated) {
-      // Update navigation for authenticated users
-      const desktopNav = document.getElementById('desktopNav');
-      if (desktopNav) {
-        desktopNav.innerHTML = `
+      // Check if user is logged in
+      const isAuthenticated = !!localStorage.getItem("access_token");
+
+      if (isAuthenticated) {
+        // Update navigation for authenticated users
+        const desktopNav = document.getElementById("desktopNav");
+        if (desktopNav) {
+          desktopNav.innerHTML = `
           <a href="dashboard/home.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">Dashboard</a>
           <a href="dashboard/profile.html" class="text-gray-700" style="transition: color 0.2s;" onmouseover="this.style.color='#f68b1f'" onmouseout="this.style.color=''">Profile</a>
           <a href="#" onclick="logoutUser()" class="text-red-600 hover:text-red-700">Logout</a>
@@ -281,37 +472,40 @@
             <i class="bi bi-github text-xl"></i>
           </a>
         `;
-      }
-    }
-
-    function logoutUser() {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      window.location.href = 'index.html';
-    }
-
-    // Load contributors for footer
-    async function loadFooterContributors() {
-      try {
-        const response = await fetch(window.sirKothayContributorsApiUrl());
-        const contributors = await response.json();
-        
-        const container = document.getElementById('contributorAvatarsFooter');
-        if (container) {
-          container.innerHTML = contributors.slice(0, 6).map(c => 
-            `<a href="${c.html_url}" target="_blank">
-              <img src="${c.avatar_url}" class="h-8 w-8 rounded-full" alt="${c.login}">
-            </a>`
-          ).join('');
         }
-      } catch (error) {
-        console.error('Error loading contributors:', error);
       }
-    }
 
-    loadContributors();
-    loadFooterContributors();
-  </script>
+      function logoutUser() {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        window.location.href = "index.html";
+      }
 
-</body>
+      // Load contributors for footer
+      async function loadFooterContributors() {
+        try {
+          const response = await fetch(window.sirKothayContributorsApiUrl());
+          const contributors = await response.json();
+
+          const container = document.getElementById("contributorAvatarsFooter");
+          if (container) {
+            container.innerHTML = contributors
+              .slice(0, 6)
+              .map(
+                (c) =>
+                  `<a href="${c.html_url}" target="_blank">
+              <img src="${c.avatar_url}" class="h-8 w-8 rounded-full" alt="${c.login}">
+            </a>`,
+              )
+              .join("");
+          }
+        } catch (error) {
+          console.error("Error loading contributors:", error);
+        }
+      }
+
+      loadContributors();
+      loadFooterContributors();
+    </script>
+  </body>
 </html>
