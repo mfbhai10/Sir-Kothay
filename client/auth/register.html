@@ -25,7 +25,7 @@
       <div class="hidden md:flex items-center justify-between px-8 py-4">
         <!-- Logo -->
         <a href="../index.html" class="flex items-center gap-3">
-          <img src="../static/images/nav-logo.png" class="h-10 rounded-lg shadow-md" alt="Logo" />
+          <img src="../static/images/nav-logo.png" class="h-10 rounded-lg bg-[#f68b1f] p-0.5 shadow-md object-contain" alt="Logo" />
         </a>
 
         <!-- Desktop Links -->
@@ -234,23 +234,47 @@
       console.error('Error:', error);
     }
   });
+
+  // Load contributors for footer
+      async function loadFooterContributors() {
+        try {
+          const response = await fetch(window.sirKothayContributorsApiUrl());
+          const contributors = await response.json();
+
+          const container = document.getElementById("contributorAvatarsFooter");
+          if (container) {
+            container.innerHTML = contributors
+              .slice(0, 6)
+              .map(
+                (c) =>
+                  `<a href="${c.html_url}" target="_blank">
+              <img src="${c.avatar_url}" class="h-8 w-8 rounded-full" alt="${c.login}">
+            </a>`,
+              )
+              .join("");
+          }
+        } catch (error) {
+          console.error("Error loading contributors:", error);
+        }
+      }
+      loadFooterContributors();
 </script>
 
 </div>
   </main>
 
-  <footer class="py-12 px-6 mt-4 mb-20 md:mb-4 bg-gray-900 text-gray-300">
+  <footer class="py-12 px-6 mt-4 mb-20 md:mb-0 bg-gray-900 text-gray-300">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-        <div>
-          <div class="flex items-center gap-3 mb-4">
-            <img src="../static/images/nav-logo.png" class="h-10 rounded-lg" alt="Logo">
+        <div class="md:flex md:flex-col md:items-center md:text-center">
+          <div class="flex items-center gap-3 mb-4 md:justify-center">
+            <img src="../static/images/nav-logo.png" class="h-10 rounded-lg bg-[#f68b1f] p-0.5 shadow-md object-contain" alt="Logo">
             <span class="text-2xl font-bold text-white">Sir Kothay?</span>
           </div>
           <p class="text-gray-400">Simple notes. Strong bonds.</p>
         </div>
 
-        <div>
+        <div class="md:flex md:flex-col md:items-center md:text-center">
           <h4 class="font-semibold text-white mb-4">Quick Links</h4>
           <ul class="space-y-2 text-gray-400">
             <li><a href="../index.html#features" class="hover:text-white transition">Features</a></li>
@@ -259,9 +283,9 @@
           </ul>
         </div>
 
-        <div>
+        <div class="md:flex md:flex-col md:items-center md:text-center">
           <h4 class="font-semibold text-white mb-4">Connect</h4>
-          <div class="flex gap-4">
+          <div class="flex gap-4 justify-left md:justify-center">
             <a href="https://github.com/UIU-Developers-Hub/Sir-Kothay" class="text-2xl hover:text-white transition">
               <i class="bi bi-github"></i>
             </a>
@@ -269,10 +293,13 @@
               <i class="bi bi-facebook"></i>
             </a>
           </div>
-          <div class="flex items-center gap-2 mt-6 text-sm">
+          <div class="flex items-center gap-2 mt-6 text-sm justify-left md:justify-center">
             <img src="https://github.com/UIU-Developers-Hub.png" class="h-8 w-8 rounded-full" alt="UIU Developers Hub">
-            <span>© 2025 Sir Kothay. Made with ❤️ by <a href="https://github.com/UIU-Developers-Hub" style="color: #f68b1f;" class="hover:underline">UIU Developers Hub</a></span>
+            <span>© 2026 Sir Kothay. Made with ❤️ by <a href="https://github.com/UIU-Developers-Hub" style="color: #f68b1f;" class="hover:underline">UIU Developers Hub</a></span>
           </div>
+          <div id="contributorAvatarsFooter" class="flex gap-2 mt-2">
+              <!-- Contributors will be loaded dynamically -->
+            </div>
         </div>
       </div>
     </div>
